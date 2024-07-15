@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spliteasy/onBoardingScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,17 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello',
-          style: TextStyle(
-            fontSize: 50,
-            fontFamily: 'Sofia Pro',
-          ),),
-        ),
-      ),
+      theme: ThemeData(fontFamily: 'Sofia Pro'),
+      home: const OnBoardingScreen(),
     );
   }
-  }
+}
