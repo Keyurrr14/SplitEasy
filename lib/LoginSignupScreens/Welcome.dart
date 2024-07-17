@@ -79,7 +79,7 @@ class Welcome extends StatelessWidget {
                 text: 'By registering, you accept SplitEasy ',
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 15,
+                    fontSize: 14,
                     height: 1.5,
                     fontFamily: 'Sofia Pro'),
                 children: [

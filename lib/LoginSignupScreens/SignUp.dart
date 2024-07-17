@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:spliteasy/LoginSignupScreens/NamePhone.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final FocusNode _emailFocus = FocusNode();
-    FocusScope.of(context).requestFocus(_emailFocus);
+  State<SignUp> createState() => _SignUpState();
+}
 
+class _SignUpState extends State<SignUp> {
+  final FocusNode _emailFocus = FocusNode();
+  bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_emailFocus);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -24,17 +38,23 @@ class SignUp extends StatelessWidget {
       body: Form(
         child: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(top: 70),
+            margin: const EdgeInsets.only(top: 20),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const Text(
+                    'Email address',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   TextFormField(
                     focusNode: _emailFocus,
                     autofocus: true,
                     decoration: const InputDecoration(
-                        labelText: 'Email',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
@@ -45,23 +65,42 @@ class SignUp extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
+                  const Text(
+                    'Password',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   TextFormField(
-                    decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(
+                    obscureText: !_isPasswordVisible,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff1f2218)),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              // ignore: dead_code
+                              _isPasswordVisible
+                                  // ignore: dead_code
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
                         )),
-                    obscureText: true,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   SizedBox(
                       width: double.infinity,
-                      height: 60,
+                      height: 50,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 3,
@@ -70,7 +109,12 @@ class SignUp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const NamePhone()));
+                          },
                           child: const Text(
                             'Next',
                             style: TextStyle(

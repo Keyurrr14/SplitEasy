@@ -24,17 +24,23 @@ class LogIn extends StatelessWidget {
       body: Form(
         child: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(top: 70),
+            margin: const EdgeInsets.only(top: 20),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const Text(
+                    'Email address',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   TextFormField(
                     focusNode: _emailFocus,
                     autofocus: true,
                     decoration: const InputDecoration(
-                        labelText: 'Email',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
@@ -45,9 +51,15 @@ class LogIn extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
+                  const Text(
+                    'Password',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        labelText: 'Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
@@ -78,12 +90,12 @@ class LogIn extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ))),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(
+                    height: 10,
                   ),
                   TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         'Forgot your password?',
                         style: TextStyle(
                             color: Color(0xff1f2128),
