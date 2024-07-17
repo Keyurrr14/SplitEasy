@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:spliteasy/LoginSignupScreens/Welcome.dart';
 import 'package:spliteasy/OnBoardingScreens/onBoarding1.dart';
 import 'package:spliteasy/OnBoardingScreens/onBoarding2.dart';
 import 'package:spliteasy/OnBoardingScreens/onBoarding3.dart';
@@ -54,11 +55,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       dotWidth: 5.0,
                       dotHeight: 5.0,
                       dotColor: Color(0xffAEBDC2),
-                      activeDotColor: Colors.black),
+                      activeDotColor: Color(0xff1F2128)),
                 ),
                 onLastPage
                     ? GestureDetector(
                         onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Welcome()));
                           _controller.nextPage(
                             duration: const Duration(milliseconds: 100),
                             curve: Curves.easeIn,
@@ -66,7 +68,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xff1f2128),
+                            color: const Color(0xff1F2128),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const SizedBox(
@@ -89,7 +91,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xff1f2128),
+                            color: const Color(0xff1F2128),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const SizedBox(
