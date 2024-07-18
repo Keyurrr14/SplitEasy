@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spliteasy/HomePage.dart';
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});
@@ -82,7 +83,13 @@ class LogIn extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()),
+                            );
+                          },
                           child: const Text(
                             'Log in',
                             style: TextStyle(
