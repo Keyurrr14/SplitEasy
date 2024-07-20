@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spliteasy/LoginSignupScreens/NamePhone.dart';
 
@@ -11,6 +13,18 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final FocusNode _emailFocus = FocusNode();
   bool _isPasswordVisible = false;
+
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -54,6 +68,7 @@ class _SignUpState extends State<SignUp> {
                   TextFormField(
                     focusNode: _emailFocus,
                     autofocus: true,
+                    controller: emailController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -61,6 +76,11 @@ class _SignUpState extends State<SignUp> {
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff1f2218)),
                         )),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? "Enter a valid email"
+                            : null,
                   ),
                   const SizedBox(
                     height: 20,
@@ -74,6 +94,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   TextFormField(
                     obscureText: !_isPasswordVisible,
+                    controller: passwordController,
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -94,6 +115,11 @@ class _SignUpState extends State<SignUp> {
                             });
                           },
                         )),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (password) =>
+                        password != null && password.length < 6
+                            ? "Enter min 6 character"
+                            : null,
                   ),
                   const SizedBox(
                     height: 20,
@@ -110,10 +136,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const NamePhone()));
+                            SignUp();
                           },
                           child: const Text(
                             'Next',
@@ -129,5 +152,21 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  Future SignUp() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NamePhone()),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 }

@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                       child: Text(
                         'I\'m owed',
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.normal),
+                            fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'My costs',
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w100),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Padding(
@@ -118,7 +118,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'Total costs',
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.normal),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Padding(

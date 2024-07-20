@@ -1,8 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spliteasy/HomePage.dart';
 
-class LogIn extends StatelessWidget {
+class LogIn extends StatefulWidget {
   const LogIn({super.key});
+
+  @override
+  State<LogIn> createState() => _LogInState();
+}
+
+class _LogInState extends State<LogIn> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +58,7 @@ class LogIn extends StatelessWidget {
                   TextFormField(
                     focusNode: _emailFocus,
                     autofocus: true,
+                    controller: emailController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -60,6 +78,7 @@ class LogIn extends StatelessWidget {
                     height: 5,
                   ),
                   TextFormField(
+                    controller: passwordController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -84,11 +103,7 @@ class LogIn extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
-                            );
+                            LogIn();
                           },
                           child: const Text(
                             'Log in',
@@ -115,5 +130,21 @@ class LogIn extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future LogIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 }
