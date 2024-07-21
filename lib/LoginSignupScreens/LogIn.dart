@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spliteasy/HomePage.dart';
@@ -10,8 +11,10 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final FocusNode _emailFocus = FocusNode();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -22,10 +25,15 @@ class _LogInState extends State<LogIn> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final FocusNode _emailFocus = FocusNode();
-    FocusScope.of(context).requestFocus(_emailFocus);
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_emailFocus);
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -66,6 +74,11 @@ class _LogInState extends State<LogIn> {
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff1f2218)),
                         )),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? "Enter a valid email"
+                            : null,
                   ),
                   const SizedBox(
                     height: 20,
@@ -78,15 +91,33 @@ class _LogInState extends State<LogIn> {
                     height: 5,
                   ),
                   TextFormField(
+                    obscureText: !_isPasswordVisible,
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff1f2218)),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              // ignore: dead_code
+                              _isPasswordVisible
+                                  // ignore: dead_code
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
                         )),
-                    obscureText: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (password) =>
+                        password != null && password.length < 6
+                            ? "Enter min 6 character"
+                            : null,
                   ),
                   const SizedBox(
                     height: 20,
@@ -144,7 +175,10 @@ class _LogInState extends State<LogIn> {
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'An error occurred')));
+      }
     }
   }
 }

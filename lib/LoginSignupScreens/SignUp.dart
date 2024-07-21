@@ -166,7 +166,10 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(builder: (context) => const NamePhone()),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'An error occurred')));
+      }
     }
   }
 }

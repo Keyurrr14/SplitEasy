@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8),
           child: IconButton(
             icon: const Icon(
-              Icons.notifications_none_rounded,
+              Icons.logout_rounded,
               color: Colors.black,
               size: 30,
             ),
@@ -39,10 +39,10 @@ class HomePage extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                height: 100,
+                height: 110,
                 decoration: BoxDecoration(
                     color: const Color(0xffdff169),
-                    borderRadius: BorderRadius.circular(5)),
+                    borderRadius: BorderRadius.circular(10)),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                       child: Text(
                         'I\'m owed',
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                       child: Text(
                         '0,00',
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w100),
+                            fontSize: 40, fontWeight: FontWeight.w900),
                       ),
                     ),
                   ],
@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      height: 100,
+                      height: 110,
                       decoration: BoxDecoration(
                           color: const Color(0xffAEBDC2),
                           borderRadius: BorderRadius.circular(10)),
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'My costs',
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Padding(
@@ -92,7 +92,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               '0,00',
                               style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.w100),
+                                  fontSize: 40, fontWeight: FontWeight.w900),
                             ),
                           ),
                         ],
@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
                   ),
                   Expanded(
                     child: Container(
-                      height: 100,
+                      height: 110,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -118,7 +118,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'Total costs',
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Padding(
@@ -126,7 +126,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               '0,00',
                               style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.w100),
+                                  fontSize: 40, fontWeight: FontWeight.w900),
                             ),
                           ),
                         ],
