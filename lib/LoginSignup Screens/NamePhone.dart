@@ -12,6 +12,7 @@ class NamePhone extends StatefulWidget {
 class _NamePhoneState extends State<NamePhone> {
   final FocusNode _fullName = FocusNode();
   final TextEditingController _countryCode = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _NamePhoneState extends State<NamePhone> {
                   ),
                   TextFormField(
                     focusNode: _fullName,
+                    controller: _nameController,
                     autofocus: true,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
@@ -155,7 +157,9 @@ class _NamePhoneState extends State<NamePhone> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
+                                  builder: (context) => HomePage(
+                                        fullName: _nameController.text,
+                                      )),
                             );
                           },
                           child: const Text(

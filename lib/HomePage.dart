@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:spliteasy/Account%20Screens/Account.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String fullName;
+
+  const HomePage({super.key, required this.fullName});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,8 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Account()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Account(fullName: fullName)));
               },
               icon: const Icon(
                 Icons.account_circle_outlined,

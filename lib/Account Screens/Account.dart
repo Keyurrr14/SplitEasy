@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Account extends StatelessWidget {
-  const Account({super.key});
+  final String fullName;
+
+  const Account({super.key, required this.fullName});
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +32,14 @@ class Account extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: const Color(0xffAEBDC2),
                     borderRadius: BorderRadius.circular(10)),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Keyur Rathod',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      fullName,
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -52,36 +54,39 @@ class Account extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                width: double.infinity,
-                height: 70,
-                decoration: BoxDecoration(
-                    color: const Color(0xffE8E8E8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.person_outline_rounded,
-                        size: 35,
-                        color: Color(0xff1f2128),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Personal Information',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 20,
-                      )
-                    ],
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: double.infinity,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffE9E9E9),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.person_outline_rounded,
+                          size: 35,
+                          color: Color(0xff1f2128),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Personal Information',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 20,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -323,7 +328,12 @@ class Account extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 30,
+              ),
+              const Center(child: Text('Made with :) in Mumbai, India')),
+              const Center(child: Text('Copyright © 2024 SplitEasy.')),
+              const SizedBox(
+                height: 30,
               )
             ],
           ),
