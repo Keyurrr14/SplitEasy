@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spliteasy/onBoardingScreen.dart';
+import 'package:spliteasy/OnBoarding%20Screens/onBoardingScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

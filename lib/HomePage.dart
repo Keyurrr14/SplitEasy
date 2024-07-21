@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spliteasy/Account%20Screens/Account.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,7 +23,10 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const Account()));
+              },
               icon: const Icon(
                 Icons.account_circle_outlined,
                 color: Colors.black,
@@ -39,7 +43,7 @@ class HomePage extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                height: 110,
+                height: 120,
                 decoration: BoxDecoration(
                     color: const Color(0xffdff169),
                     borderRadius: BorderRadius.circular(10)),
@@ -51,7 +55,7 @@ class HomePage extends StatelessWidget {
                       child: Text(
                         'I\'m owed',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Padding(
@@ -66,13 +70,13 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Row(
                 children: [
                   Expanded(
                     child: Container(
-                      height: 110,
+                      height: 130,
                       decoration: BoxDecoration(
                           color: const Color(0xffAEBDC2),
                           borderRadius: BorderRadius.circular(10)),
@@ -84,7 +88,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'My costs',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.w600),
                             ),
                           ),
                           Padding(
@@ -100,11 +104,11 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: 5,
+                    width: 10,
                   ),
                   Expanded(
                     child: Container(
-                      height: 110,
+                      height: 130,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -118,7 +122,7 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               'Total costs',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.w600),
                             ),
                           ),
                           Padding(

@@ -1,22 +1,20 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spliteasy/LoginSignupScreens/NamePhone.dart';
+import 'package:spliteasy/LoginSignup%20Screens/NamePhone.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class LogIn extends StatefulWidget {
+  const LogIn({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<LogIn> createState() => _LogInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LogInState extends State<LogIn> {
   final FocusNode _emailFocus = FocusNode();
-  bool _isPasswordVisible = false;
-
-  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -44,7 +42,7 @@ class _SignUpState extends State<SignUp> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          'Sign up',
+          'Log in',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -126,25 +124,36 @@ class _SignUpState extends State<SignUp> {
                   ),
                   SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 60,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 3,
-                            backgroundColor: const Color(0xffdff169),
+                            backgroundColor: const Color(0xff1f2128),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                           onPressed: () {
-                            SignUp();
+                            LogIn();
                           },
                           child: const Text(
-                            'Next',
+                            'Log in',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xff1f2128)),
+                                color: Colors.white),
                           ))),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Forgot your password?',
+                        style: TextStyle(
+                            color: Color(0xff1f2128),
+                            decoration: TextDecoration.underline),
+                      ))
                 ],
               ),
             ),
@@ -154,9 +163,9 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Future SignUp() async {
+  Future LogIn() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );

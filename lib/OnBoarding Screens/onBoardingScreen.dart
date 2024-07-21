@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:spliteasy/LoginSignupScreens/Welcome.dart';
-import 'package:spliteasy/OnBoardingScreens/onBoarding1.dart';
-import 'package:spliteasy/OnBoardingScreens/onBoarding2.dart';
-import 'package:spliteasy/OnBoardingScreens/onBoarding3.dart';
+import 'package:spliteasy/LoginSignup%20Screens/Welcome.dart';
+import 'package:spliteasy/OnBoarding%20Screens/onBoarding1.dart';
+import 'package:spliteasy/OnBoarding%20Screens/onBoarding2.dart';
+import 'package:spliteasy/OnBoarding%20Screens/onBoarding3.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
