@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spliteasy/Account%20Screens/PersonalInfo.dart';
 
 class Account extends StatelessWidget {
   final String fullName;
+  final String phoneNumber;
 
-  const Account({super.key, required this.fullName});
+  const Account({super.key, required this.fullName, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class Account extends StatelessWidget {
                     color: const Color(0xffAEBDC2),
                     borderRadius: BorderRadius.circular(10)),
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -55,7 +57,14 @@ class Account extends StatelessWidget {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PersonalInfo(
+                            fullName: fullName, phoneNumber: phoneNumber)),
+                  );
+                },
                 child: Container(
                   width: double.infinity,
                   height: 70,
@@ -330,8 +339,16 @@ class Account extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const Center(child: Text('Made with :) in Mumbai, India')),
-              const Center(child: Text('Copyright © 2024 SplitEasy.')),
+              const Center(
+                  child: Text(
+                'Made with :) in Mumbai, India',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              )),
+              const Center(
+                  child: Text(
+                'Copyright © 2024 SplitEasy.',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              )),
               const SizedBox(
                 height: 30,
               )

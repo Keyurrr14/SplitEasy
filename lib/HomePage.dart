@@ -3,8 +3,10 @@ import 'package:spliteasy/Account%20Screens/Account.dart';
 
 class HomePage extends StatelessWidget {
   final String fullName;
+  final String phoneNumber;
 
-  const HomePage({super.key, required this.fullName});
+  const HomePage(
+      {super.key, required this.fullName, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,8 @@ class HomePage extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Account(fullName: fullName)));
+                    builder: (context) =>
+                        Account(fullName: fullName, phoneNumber: phoneNumber)));
               },
               icon: const Icon(
                 Icons.account_circle_outlined,

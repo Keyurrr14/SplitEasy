@@ -10,9 +10,11 @@ class NamePhone extends StatefulWidget {
 }
 
 class _NamePhoneState extends State<NamePhone> {
+  final _formKey = GlobalKey<FormState>();
   final FocusNode _fullName = FocusNode();
   final TextEditingController _countryCode = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _NamePhoneState extends State<NamePhone> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Container(
             margin: const EdgeInsets.only(top: 20),
             child: Padding(
@@ -77,48 +80,74 @@ class _NamePhoneState extends State<NamePhone> {
                     height: 10,
                   ),
                   Container(
-                      height: 55,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: const Color(0xff1f2218),
-                          ),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          SizedBox(
-                            width: 40,
-                            height: 30,
-                            child: TextFormField(
-                              controller: _countryCode,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
+                    height:
+                        100,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: const Color(0xff1f2218),
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: 45,
+                              height: 30,
+                              child: TextFormField(
+                                controller: _countryCode,
+                                readOnly: true,
+                                style: const TextStyle(fontSize: 22),
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
+                                ),
                               ),
                             ),
-                          ),
-                          const Text(
-                            '|',
-                            style: TextStyle(
-                                fontSize: 33, color: Color(0xff1f2218)),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
+                            const Text(
+                              '|',
+                              style: TextStyle(
+                                  fontSize: 40, color: Color(0xff1f2218)),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
                               child: TextFormField(
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Phone #(optional)'),
-                          )),
-                        ],
-                      )),
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
+                                style: const TextStyle(fontSize: 25),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 8),
+                                    hintText: 'Phone #(optional)',
+                                    hintStyle: TextStyle(fontSize: 15)),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) =>
+                                    value != null && value.length != 10
+                                        ? "Enter a valid phone number"
+                                        : null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -159,6 +188,7 @@ class _NamePhoneState extends State<NamePhone> {
                               MaterialPageRoute(
                                   builder: (context) => HomePage(
                                         fullName: _nameController.text,
+                                        phoneNumber: _phoneController.text,
                                       )),
                             );
                           },
