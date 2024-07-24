@@ -1,11 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spliteasy/Account%20Screens/PersonalInfo.dart';
+import 'package:spliteasy/LoginSignup%20Screens/Welcome.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
   final String fullName;
   final String phoneNumber;
 
   const Account({super.key, required this.fullName, required this.phoneNumber});
+
+  @override
+  State<Account> createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final user = FirebaseAuth.instance.currentUser;
+
+  Future signOut() async {
+    await auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Welcome()));
+  }
+
+  Future deleteAccount() async {
+    await user?.delete();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Welcome()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +61,7 @@ class Account extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      fullName,
+                      widget.fullName,
                       style: const TextStyle(
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
@@ -62,7 +84,8 @@ class Account extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PersonalInfo(
-                            fullName: fullName, phoneNumber: phoneNumber)),
+                            fullName: widget.fullName,
+                            phoneNumber: widget.phoneNumber)),
                   );
                 },
                 child: Container(
@@ -312,27 +335,37 @@ class Account extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const Text(
-                'Log out',
-                style: TextStyle(
-                  fontSize: 18,
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  signOut();
+                },
+                child: const Text(
+                  'Log out',
+                  style: TextStyle(
+                    fontSize: 18,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
-              RichText(
-                text: const TextSpan(
-                  text: 'Delete account',
-                  style: TextStyle(
-                    fontFamily: 'Sofia Pro',
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.red,
+              GestureDetector(
+                onTap: () {
+                  deleteAccount();
+                },
+                child: RichText(
+                  text: const TextSpan(
+                    text: 'Delete account',
+                    style: TextStyle(
+                      fontFamily: 'Sofia Pro',
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.red,
+                    ),
                   ),
                 ),
               ),
