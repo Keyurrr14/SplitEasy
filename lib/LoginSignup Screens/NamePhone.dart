@@ -80,8 +80,7 @@ class _NamePhoneState extends State<NamePhone> {
                     height: 10,
                   ),
                   Container(
-                    height:
-                        100,
+                    height: 100,
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
@@ -185,11 +184,33 @@ class _NamePhoneState extends State<NamePhone> {
                           onPressed: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage(
-                                        fullName: _nameController.text,
-                                        phoneNumber: _phoneController.text,
-                                      )),
+                              PageRouteBuilder(
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  const begin =
+                                      Offset(1.0, 0.0); // Start from the right
+                                  const end = Offset
+                                      .zero; // End at the original position
+                                  const curve = Curves.easeInOut;
+
+                                  var tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                                transitionDuration: Duration(milliseconds: 400),
+                                pageBuilder: (BuildContext context,
+                                    Animation<double> animation,
+                                    Animation<double> secondaryAnimation) {
+                                  return HomePage(
+                                    fullName: _nameController.text,
+                                    phoneNumber: _phoneController.text,
+                                  );
+                                },
+                              ),
                             );
                           },
                           child: const Text(

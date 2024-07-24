@@ -19,12 +19,14 @@ class _AccountState extends State<Account> {
 
   Future signOut() async {
     await auth.signOut();
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const Welcome()));
   }
 
   Future deleteAccount() async {
     await user?.delete();
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const Welcome()));
   }

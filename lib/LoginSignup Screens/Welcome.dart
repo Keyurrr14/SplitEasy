@@ -34,9 +34,32 @@ class Welcome extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUp()));
+                      context,
+                      PageRouteBuilder(
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin =
+                              Offset(1.0, 0.0); // Start from the right
+                          const end =
+                              Offset.zero; // End at the original position
+                          const curve = Curves.easeInOut;
+
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 400),
+                        pageBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          return SignUp();
+                        },
+                      ),
+                    );
                   },
                   child: const Text(
                     'Sign up',
@@ -61,8 +84,33 @@ class Welcome extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const LogIn()));
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin =
+                              Offset(1.0, 0.0); // Start from the right
+                          const end =
+                              Offset.zero; // End at the original position
+                          const curve = Curves.easeInOut;
+
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 400),
+                        pageBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          return LogIn();
+                        },
+                      ),
+                    );
                   },
                   child: const Text(
                     'Log in',

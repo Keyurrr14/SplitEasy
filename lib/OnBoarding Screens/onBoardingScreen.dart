@@ -60,7 +60,34 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onLastPage
                     ? GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Welcome()));
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin =
+                                    Offset(1.0, 0.0); // Start from the right
+                                const end =
+                                    Offset.zero; // End at the original position
+                                const curve = Curves.easeIn;
+
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: Duration(milliseconds: 300),
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation) {
+                                return Welcome();
+                              },
+                            ),
+                          );
+
                           _controller.nextPage(
                             duration: const Duration(milliseconds: 100),
                             curve: Curves.easeIn,
