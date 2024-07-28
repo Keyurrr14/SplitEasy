@@ -138,7 +138,7 @@ class _NamePhoneState extends State<NamePhone> {
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value) =>
                                     value != null && value.length != 10
-                                        ? "Enter a valid phone number"
+                                        ? "Enter a valid 10 digit phone number"
                                         : null,
                               ),
                             ),

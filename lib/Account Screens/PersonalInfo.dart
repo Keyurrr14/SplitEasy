@@ -34,7 +34,14 @@ class PersonalInfo extends StatelessWidget {
                   width: 120,
                   decoration: BoxDecoration(
                       color: const Color(0xffdff169),
-                      borderRadius: BorderRadius.circular(100)),
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0.0, 2.0), //(x,y)
+                          blurRadius: 2.0,
+                        )
+                      ]),
                   child: Center(
                       child: Text(
                     fullName[0],
@@ -51,7 +58,14 @@ class PersonalInfo extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                     color: const Color(0xffE9E9E9),
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0, 2.0), //(x,y)
+                        blurRadius: 2.0,
+                      )
+                    ]),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -80,7 +94,14 @@ class PersonalInfo extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                     color: const Color(0xffE9E9E9),
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0, 2.0), //(x,y)
+                        blurRadius: 2.0,
+                      )
+                    ]),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
