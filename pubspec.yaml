@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.8
   email_validator: ^3.0.0
+  contacts_service: ^0.6.3
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,8 @@ flutter:
     - assets/images/onboarding3.png
     - assets/images/welcome.png
     - assets/images/logo.png
+    - assets/images/avatar1.png
+    - assets/images/avatar2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

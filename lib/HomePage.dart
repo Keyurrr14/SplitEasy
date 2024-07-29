@@ -1,5 +1,8 @@
+// HomePage.dart
 import 'package:flutter/material.dart';
 import 'package:spliteasy/Account%20Screens/Account.dart';
+import 'package:spliteasy/GroupModel.dart';
+import 'package:spliteasy/GroupScreen.dart';
 
 class HomePage extends StatefulWidget {
   final String fullName;
@@ -165,7 +168,7 @@ class _HomePageState extends State<HomePage> {
               children: groups
                   .map((group) => Container(
                         width: double.infinity,
-                        height: 70,
+                        height: 60,
                         margin: const EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           color: const Color(0xffE9E9E9),
@@ -177,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                             title: Text(
                               group.name,
                               style: const TextStyle(
-                                fontSize: 24,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xff1f2128),
                               ),
@@ -186,6 +189,11 @@ class _HomePageState extends State<HomePage> {
                               Icons.arrow_forward_ios_rounded,
                               size: 20,
                             ),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      GroupScreen(group: group)));
+                            },
                           ),
                         ),
                       ))
@@ -319,7 +327,9 @@ class _HomePageState extends State<HomePage> {
             {
               setState(() {
                 groups.add(Group(
-                    name: value['groupName'], icon: value['groupType']!.icon));
+                    name: value['groupName'],
+                    icon: value['groupType']!.icon,
+                    contacts: []));
               })
             }
         });
@@ -328,35 +338,31 @@ class _HomePageState extends State<HomePage> {
   Widget _buildGroupTypeCard(GroupType type, bool isSelected) {
     return Card(
       elevation: isSelected ? 4 : 2,
-      color: isSelected ? Colors.blueAccent : const Color(0xffE9E9E9),
+      color: const Color(0xffE9E9E9),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: isSelected ? Color(0xff1f2128) : Colors.transparent,
+          width: 2,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(type.icon,
-                size: 30, color: isSelected ? Colors.white : Colors.black),
+            Icon(type.icon, size: 30, color: Colors.black),
             const SizedBox(height: 8),
             Text(type.name,
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: isSelected ? Colors.white : Colors.black)),
+                    color: Color(0xff1f2128))),
           ],
         ),
       ),
     );
   }
-}
-
-class Group {
-  final String name;
-  final IconData icon;
-
-  Group({required this.name, required this.icon});
 }
 
 enum GroupType {
