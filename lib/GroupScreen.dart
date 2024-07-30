@@ -1,5 +1,6 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spliteasy/GroupModel.dart';
 
@@ -17,18 +18,30 @@ class _GroupScreenState extends State<GroupScreen> {
   late Future<List<Contact>> _futureContacts;
   List<Contact> selectedContacts = [];
   TextEditingController _searchController = TextEditingController();
+  // ignore: unused_field
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     groupContacts = widget.group.contacts;
+    _addDefaultYouContact();
     _futureContacts = _fetchContacts();
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text;
       });
     });
+  }
+
+  void _addDefaultYouContact() {
+    Contact youContact = Contact(
+      displayName: 'You',
+      givenName: 'You',
+    );
+    if (!groupContacts.any((contact) => contact.displayName == 'You')) {
+      groupContacts.add(youContact);
+    }
   }
 
   Future<List<Contact>> _fetchContacts() async {
@@ -56,72 +69,292 @@ class _GroupScreenState extends State<GroupScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: groupContacts.map((contact) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(
-                children: [
-                  Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 10, left: 20),
+            child: Text(
+              'Members',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: groupContacts.map((contact) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundColor: const Color(0xffdff169),
-                        child: Text(
-                          _getInitials(contact.displayName),
-                          style: const TextStyle(
-                              fontSize: 20, color: Color(0xff1f2128)),
-                        ),
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: const Color(0xffdff169),
+                            child: Text(
+                              _getInitials(contact.displayName),
+                              style: const TextStyle(
+                                  fontSize: 20, color: Color(0xff1f2128)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            width: 60,
+                            child: Text(
+                              contact.displayName ?? 'No Name',
+                              style: const TextStyle(fontSize: 14),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 5),
-                      Container(
-                        width: 60,
-                        child: Text(
-                          contact.displayName ?? 'No Name',
-                          style: const TextStyle(fontSize: 14),
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
+                      if (contact.displayName != 'You')
+                        Positioned(
+                          top: -5,
+                          right: -5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                groupContacts.remove(contact);
+                              });
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 40),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Description'),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Enter description',
+                          hintStyle: TextStyle(color: Color(0xffAEBDC2)),
+                          border: InputBorder.none,
                         ),
                       ),
                     ],
                   ),
-                  Positioned(
-                    top: -5,
-                    right: -5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          groupContacts.remove(contact);
-                        });
-                      },
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          size: 14,
-                          color: Colors.white,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Amount'),
+                      TextField(
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: const InputDecoration(
+                          hintText: '₹ 0',
+                          hintStyle: TextStyle(color: Color(0xffAEBDC2)),
+                          border: InputBorder.none,
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20),
+            child: Row(
+              children: [
+                Text(
+                  'Split Among',
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(
+                  '  (Tap the names below)',
+                  style: TextStyle(fontSize: 10),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SizedBox(
+              height: 60,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount:
+                    groupContacts.length + 1, // +1 for the 'Equally' button
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    // Render the 'Equally' button
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 8, bottom: 8),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // Define the action for 'Equally' button here
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              color: Color(0xff1f2128), width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: const EdgeInsets.only(
+                            top: 5,
+                            bottom: 5,
+                            left: 10,
+                            right: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'Equally',
+                          style: TextStyle(
+                            color: Color(0xff1f2128),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Render the contact buttons
+                    Contact contact = groupContacts[
+                        index - 1]; // Adjust index for the contact
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 8, bottom: 8),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // Define action for contact button here
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              color: Color(0xff1f2128), width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: const EdgeInsets.only(
+                            top: 5,
+                            bottom: 5,
+                            left: 10,
+                            right: 10,
+                          ),
+                        ),
+                        child: Text(
+                          contact.displayName ?? 'No Name',
+                          style: const TextStyle(
+                            color: Color(0xff1f2128),
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    // Define action for contact button here
+                  },
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: const Color(0xffdff169),
+                    side: const BorderSide(color: Color(0xff1f2128), width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                      bottom: 5,
+                      left: 10,
+                      right: 10,
                     ),
                   ),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
+                  child: const Text(
+                    'Add more item',
+                    style: TextStyle(
+                      color: Color(0xff1f2128),
+                      fontSize: 12,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // Define action for contact button here
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color(0xffdff169),
+                      side:
+                          const BorderSide(color: Color(0xff1f2128), width: 2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.only(
+                        top: 5,
+                        bottom: 5,
+                        left: 10,
+                        right: 10,
+                      ),
+                    ),
+                    child: const Text(
+                      'Done',
+                      style: TextStyle(
+                        color: Color(0xff1f2128),
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _addContacts,
         elevation: 5,
-        backgroundColor: Color(0xff1f2128),
-        child: const Icon(
+        backgroundColor: const Color(0xff1f2128),
+        label: const Text(
+          'Add Members',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        icon: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -139,7 +372,12 @@ class _GroupScreenState extends State<GroupScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
-                title: const Text('Add Members'),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                title: const Text(
+                  'Add Members',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
                 content: const SizedBox(
                   width: double.maxFinite,
                   height: 300,
@@ -188,7 +426,7 @@ class _GroupScreenState extends State<GroupScreen> {
                   return AlertDialog(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
-                    titlePadding: EdgeInsets.only(top: 25, left: 25),
+                    titlePadding: const EdgeInsets.only(top: 25, left: 25),
                     title: const Text(
                       'Add Members',
                       style:
@@ -203,7 +441,7 @@ class _GroupScreenState extends State<GroupScreen> {
                           height: 50,
                           child: TextField(
                             controller: _searchController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Search',
                               hintStyle: TextStyle(fontSize: 15),
                               prefixIcon: Icon(
@@ -222,7 +460,7 @@ class _GroupScreenState extends State<GroupScreen> {
                           width: double.maxFinite,
                           height: 200,
                           child: ListView.builder(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 10),
                             itemCount: filteredContacts.length,
                             itemBuilder: (context, index) {
                               Contact contact =

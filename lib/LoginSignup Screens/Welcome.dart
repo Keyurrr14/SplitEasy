@@ -29,7 +29,7 @@ class Welcome extends StatelessWidget {
                     backgroundColor: const Color(0xffdff169),
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(10), // Remove rounded corners
+                          BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: () {

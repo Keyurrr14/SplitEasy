@@ -66,9 +66,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 const begin =
-                                    Offset(1.0, 0.0); // Start from the right
+                                    Offset(1.0, 0.0);
                                 const end =
-                                    Offset.zero; // End at the original position
+                                    Offset.zero;
                                 const curve = Curves.easeIn;
 
                                 var tween = Tween(begin: begin, end: end)
