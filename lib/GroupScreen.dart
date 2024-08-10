@@ -1,8 +1,9 @@
+// group_screen.dart
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spliteasy/GroupModel.dart';
+import 'package:spliteasy/SplitSection.dart'; // Import the SplitSection component
 
 class GroupScreen extends StatefulWidget {
   final Group group;
@@ -13,13 +14,23 @@ class GroupScreen extends StatefulWidget {
   _GroupScreenState createState() => _GroupScreenState();
 }
 
+class SplitSectionData {
+  final TextEditingController amountController;
+  final List<Contact> selectedContacts;
+
+  SplitSectionData({
+    required this.amountController,
+    required this.selectedContacts,
+  });
+}
+
 class _GroupScreenState extends State<GroupScreen> {
   late List<Contact> groupContacts;
   late Future<List<Contact>> _futureContacts;
   List<Contact> selectedContacts = [];
-  TextEditingController _searchController = TextEditingController();
-  TextEditingController _amountController = TextEditingController();
-  // ignore: unused_field
+  List<SplitSectionData> _splitSections = [];
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
   String _searchQuery = '';
 
   @override
@@ -33,14 +44,25 @@ class _GroupScreenState extends State<GroupScreen> {
         _searchQuery = _searchController.text;
       });
     });
+
+    // Initialize with one SplitSection
+    _splitSections.add(SplitSectionData(
+      amountController: TextEditingController(),
+      selectedContacts: [],
+    ));
   }
 
   void _addDefaultYouContact() {
-    Contact youContact = Contact(
-      displayName: 'You',
-      givenName: 'You',
-    );
-    if (!groupContacts.any((contact) => contact.displayName == 'You')) {
+    // Check if "You" contact already exists in groupContacts
+    bool hasYouContact =
+        groupContacts.any((contact) => contact.displayName == 'You');
+
+    // If "You" contact doesn't exist, add it
+    if (!hasYouContact) {
+      Contact youContact = Contact(
+        displayName: 'You',
+        givenName: 'You',
+      );
       groupContacts.add(youContact);
     }
   }
@@ -57,52 +79,72 @@ class _GroupScreenState extends State<GroupScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    for (var section in _splitSections) {
+      section.amountController.dispose();
+    }
     super.dispose();
   }
 
+  void _addMoreItem() {
+    setState(() {
+      _splitSections.add(SplitSectionData(
+        amountController: TextEditingController(),
+        selectedContacts: [],
+      ));
+    });
+  }
+
   void _showSplitDetails(BuildContext context) {
-    if (selectedContacts.isEmpty) {
+    if (_splitSections.any((section) => section.selectedContacts.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select contacts to split the amount.'),
+          content: Text('Please select contacts in all sections.'),
         ),
       );
       return;
     }
 
-    final amount = double.tryParse(_amountController.text) ?? 0;
-    final splitAmount = amount / selectedContacts.length;
+    // Process the split details for all sections
+    for (var section in _splitSections) {
+      final amount = double.tryParse(section.amountController.text) ?? 0;
+      final splitAmount = amount / section.selectedContacts.length;
 
-    // Debug: Print calculated values
-    print("Total amount: $amount");
-    print("Number of selected contacts: ${selectedContacts.length}");
-    print("Split amount: $splitAmount");
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Split Details'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: selectedContacts.map((contact) {
-              return ListTile(
-                title: Text(contact.displayName ?? 'No Name'),
-                trailing: Text('₹ ${splitAmount.toStringAsFixed(2)}'),
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Split Details'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: section.selectedContacts.map((contact) {
+                return ListTile(
+                  title: Text(contact.displayName ?? 'No Name'),
+                  trailing: Text('₹ ${splitAmount.toStringAsFixed(2)}'),
+                );
+              }).toList(),
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _handleContactSelected(Contact contact, SplitSectionData section) {
+    setState(() {
+      if (section.selectedContacts.contains(contact)) {
+        section.selectedContacts.remove(contact);
+      } else {
+        section.selectedContacts.add(contact);
+      }
+    });
   }
 
   @override
@@ -188,223 +230,36 @@ class _GroupScreenState extends State<GroupScreen> {
                 }).toList(),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, top: 40),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Description'),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Enter description',
-                            hintStyle: TextStyle(color: Color(0xffAEBDC2)),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Amount'),
-                        TextField(
-                          controller: _amountController,
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          decoration: const InputDecoration(
-                            hintText: '₹ 0',
-                            hintStyle: TextStyle(color: Color(0xffAEBDC2)),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, left: 20),
-              child: Row(
-                children: [
-                  Text(
-                    'Split Among',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  Text(
-                    '  (Tap the names below)',
-                    style: TextStyle(fontSize: 10),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
+            Column(
+              children: _splitSections.map((section) {
+                return SplitSection(
+                  amountController: section.amountController,
+                  groupContacts: groupContacts,
+                  selectedContacts: section.selectedContacts,
+                  onDonePressed: () => _showSplitDetails(context),
+                  onContactSelected: (contact) =>
+                      _handleContactSelected(contact, section),
+                );
+              }).toList(),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: SizedBox(
-                height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount:
-                      groupContacts.length + 1, // +1 for the 'Equally' button
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, top: 8, bottom: 8),
-                        child: OutlinedButton(
-                          onPressed: () {
-                            // Define the action for 'Equally' button here
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                color: Color(0xff1f2128), width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.only(
-                              top: 5,
-                              bottom: 5,
-                              left: 10,
-                              right: 10,
-                            ),
-                          ),
-                          child: const Text(
-                            'Equally',
-                            style: TextStyle(
-                              color: Color(0xff1f2128),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      Contact contact = groupContacts[index - 1];
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, top: 8, bottom: 8),
-                        child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (selectedContacts.contains(contact)) {
-                                selectedContacts.remove(contact);
-                              } else {
-                                selectedContacts.add(contact);
-                              }
-                            });
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                color: Color(0xff1f2128), width: 2),
-                            backgroundColor: selectedContacts.contains(contact)
-                                ? const Color(
-                                    0xff1f2128) // Black background when selected
-                                : Colors
-                                    .transparent, // Default transparent background
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.only(
-                              top: 5,
-                              bottom: 5,
-                              left: 10,
-                              right: 10,
-                            ),
-                          ),
-                          child: Text(
-                            contact.displayName ?? 'No Name',
-                            style: TextStyle(
-                              color: selectedContacts.contains(contact)
-                                  ? Colors.white // White text when selected
-                                  : const Color(
-                                      0xff1f2128), // Black text when not selected
-                              fontSize: 16,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    }
-                  },
+              padding: const EdgeInsets.only(top: 20, left: 20),
+              child: OutlinedButton(
+                onPressed: _addMoreItem,
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xffdff169),
+                  side: const BorderSide(color: Color(0xff1f2128), width: 2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                ),
+                child: const Text(
+                  'Add more item',
+                  style: TextStyle(color: Color(0xff1f2128), fontSize: 12),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      // Define action for contact button here
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: const Color(0xffdff169),
-                      side:
-                          const BorderSide(color: Color(0xff1f2128), width: 2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.only(
-                        top: 5,
-                        bottom: 5,
-                        left: 10,
-                        right: 10,
-                      ),
-                    ),
-                    child: const Text(
-                      'Add more item',
-                      style: TextStyle(
-                        color: Color(0xff1f2128),
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: OutlinedButton(
-                      onPressed: () => {
-                        // Define action for contact button here
-                        _showSplitDetails(context)
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: const Color(0xffdff169),
-                        side: const BorderSide(
-                            color: Color(0xff1f2128), width: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: const EdgeInsets.only(
-                          top: 5,
-                          bottom: 5,
-                          left: 10,
-                          right: 10,
-                        ),
-                      ),
-                      child: const Text(
-                        'Done',
-                        style: TextStyle(
-                          color: Color(0xff1f2128),
-                          fontSize: 12,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),
