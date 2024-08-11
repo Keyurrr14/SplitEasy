@@ -7,6 +7,7 @@ class SplitSection extends StatefulWidget {
   final List<Contact> groupContacts;
   final List<Contact> selectedContacts;
   final VoidCallback onDonePressed;
+  final VoidCallback onDeletePressed; // Callback to handle deletion
   final Function(Contact)
       onContactSelected; // Callback to handle contact selection
 
@@ -16,7 +17,8 @@ class SplitSection extends StatefulWidget {
     required this.groupContacts,
     required this.selectedContacts,
     required this.onDonePressed,
-    required this.onContactSelected, // Initialize callback
+    required this.onDeletePressed, // Initialize callback for deletion
+    required this.onContactSelected, // Initialize callback for contact selection
   }) : super(key: key);
 
   @override
@@ -33,13 +35,13 @@ class _SplitSectionState extends State<SplitSection> {
           padding: const EdgeInsets.only(left: 30, top: 40),
           child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Description'),
+                    Text('Description'),
                     TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Enter description',
                         hintStyle: TextStyle(color: Color(0xffAEBDC2)),
                         border: InputBorder.none,
@@ -94,8 +96,7 @@ class _SplitSectionState extends State<SplitSection> {
             height: 60,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: widget.groupContacts.length +
-                  1, // +1 for the 'Equally' button
+              itemCount: widget.groupContacts.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
@@ -127,7 +128,6 @@ class _SplitSectionState extends State<SplitSection> {
                     child: OutlinedButton(
                       onPressed: () {
                         setState(() {
-                          // Call the provided callback to handle contact selection
                           widget.onContactSelected(contact);
                         });
                       },
@@ -135,10 +135,8 @@ class _SplitSectionState extends State<SplitSection> {
                         side: const BorderSide(
                             color: Color(0xff1f2128), width: 2),
                         backgroundColor: isSelected
-                            ? const Color(
-                                0xff1f2128) // Black background when selected
-                            : Colors
-                                .transparent, // Transparent background when not selected
+                            ? const Color(0xff1f2128)
+                            : Colors.transparent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -183,23 +181,49 @@ class _SplitSectionState extends State<SplitSection> {
                   style: TextStyle(color: Color(0xff1f2128), fontSize: 12),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: OutlinedButton(
-                  onPressed: widget.onDonePressed,
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: const Color(0xffdff169),
-                    side: const BorderSide(color: Color(0xff1f2128), width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: OutlinedButton(
+                      onPressed: widget.onDeletePressed,
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        side: const BorderSide(
+                            color: Color(0xff1f2128), width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
                   ),
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(color: Color(0xff1f2128), fontSize: 12),
+                  const SizedBox(width: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 18.0),
+                    child: OutlinedButton(
+                      onPressed: widget.onDonePressed,
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: const Color(0xffdff169),
+                        side: const BorderSide(
+                            color: Color(0xff1f2128), width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      child: const Text(
+                        'Done',
+                        style:
+                            TextStyle(color: Color(0xff1f2128), fontSize: 12),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

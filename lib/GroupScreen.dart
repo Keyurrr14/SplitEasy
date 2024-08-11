@@ -1,9 +1,8 @@
-// group_screen.dart
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spliteasy/GroupModel.dart';
-import 'package:spliteasy/SplitSection.dart'; // Import the SplitSection component
+import 'package:spliteasy/SplitSection.dart';
 
 class GroupScreen extends StatefulWidget {
   final Group group;
@@ -53,11 +52,9 @@ class _GroupScreenState extends State<GroupScreen> {
   }
 
   void _addDefaultYouContact() {
-    // Check if "You" contact already exists in groupContacts
     bool hasYouContact =
         groupContacts.any((contact) => contact.displayName == 'You');
 
-    // If "You" contact doesn't exist, add it
     if (!hasYouContact) {
       Contact youContact = Contact(
         displayName: 'You',
@@ -104,7 +101,6 @@ class _GroupScreenState extends State<GroupScreen> {
       return;
     }
 
-    // Process the split details for all sections
     for (var section in _splitSections) {
       final amount = double.tryParse(section.amountController.text) ?? 0;
       final splitAmount = amount / section.selectedContacts.length;
@@ -144,6 +140,12 @@ class _GroupScreenState extends State<GroupScreen> {
       } else {
         section.selectedContacts.add(contact);
       }
+    });
+  }
+
+  void _handleDeleteSection(SplitSectionData section) {
+    setState(() {
+      _splitSections.remove(section);
     });
   }
 
@@ -239,6 +241,8 @@ class _GroupScreenState extends State<GroupScreen> {
                   onDonePressed: () => _showSplitDetails(context),
                   onContactSelected: (contact) =>
                       _handleContactSelected(contact, section),
+                  onDeletePressed: () =>
+                      _handleDeleteSection(section),
                 );
               }).toList(),
             ),
