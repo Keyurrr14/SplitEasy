@@ -2,6 +2,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spliteasy/GroupModel.dart';
+import 'package:spliteasy/SplitDetailsScreen.dart';
 import 'package:spliteasy/SplitSection.dart';
 
 class GroupScreen extends StatefulWidget {
@@ -92,46 +93,29 @@ class _GroupScreenState extends State<GroupScreen> {
   }
 
   void _showSplitDetails(BuildContext context) {
-    if (_splitSections.any((section) => section.selectedContacts.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select contacts in all sections.'),
-        ),
-      );
-      return;
-    }
+  Map<Contact, double> totalSplit = {};
 
-    for (var section in _splitSections) {
-      final amount = double.tryParse(section.amountController.text) ?? 0;
-      final splitAmount = amount / section.selectedContacts.length;
+  for (var section in _splitSections) {
+    final amount = double.tryParse(section.amountController.text) ?? 0;
+    final splitAmount = amount / section.selectedContacts.length;
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Split Details'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: section.selectedContacts.map((contact) {
-                return ListTile(
-                  title: Text(contact.displayName ?? 'No Name'),
-                  trailing: Text('₹ ${splitAmount.toStringAsFixed(2)}'),
-                );
-              }).toList(),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+    for (var contact in section.selectedContacts) {
+      if (totalSplit.containsKey(contact)) {
+        totalSplit[contact] = totalSplit[contact]! + splitAmount;
+      } else {
+        totalSplit[contact] = splitAmount;
+      }
     }
   }
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SplitDetailsScreen(splitDetails: totalSplit),
+    ),
+  );
+}
+
 
   void _handleContactSelected(Contact contact, SplitSectionData section) {
     setState(() {
