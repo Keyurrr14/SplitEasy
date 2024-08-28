@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spliteasy/HomePage.dart';
+import 'package:spliteasy/services/UserService.dart';
 
 class NamePhone extends StatefulWidget {
-  const NamePhone({super.key});
+  final email;
+  final password;
+
+  const NamePhone({super.key, required this.email, required this.password});
 
   @override
   State<NamePhone> createState() => _NamePhoneState();
@@ -181,37 +185,45 @@ class _NamePhoneState extends State<NamePhone> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              PageRouteBuilder(
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  const begin =
-                                      Offset(1.0, 0.0); // Start from the right
-                                  const end = Offset
-                                      .zero; // End at the original position
-                                  const curve = Curves.easeInOut;
+                          onPressed: () async {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              await sendData(
+                                widget.email,
+                                widget.password,
+                                _nameController.text,
+                                _phoneController.text,
+                              );
 
-                                  var tween = Tween(begin: begin, end: end)
-                                      .chain(CurveTween(curve: curve));
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = Offset(1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.easeInOut;
 
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                                transitionDuration: Duration(milliseconds: 400),
-                                pageBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secondaryAnimation) {
-                                  return HomePage(
-                                    fullName: _nameController.text,
-                                    phoneNumber: _phoneController.text,
-                                  );
-                                },
-                              ),
-                            );
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
+
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                  transitionDuration:
+                                      Duration(milliseconds: 400),
+                                  pageBuilder: (BuildContext context,
+                                      Animation<double> animation,
+                                      Animation<double> secondaryAnimation) {
+                                    return HomePage(
+                                      fullName: _nameController.text,
+                                      phoneNumber: _phoneController.text,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
                           },
                           child: const Text(
                             'Done',

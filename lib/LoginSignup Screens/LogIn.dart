@@ -189,7 +189,10 @@ class _LogInState extends State<LogIn> {
           transitionDuration: Duration(milliseconds: 400),
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
-            return NamePhone();
+            return NamePhone(
+              email: emailController.text,
+              password: passwordController.text,
+            );
           },
         ),
       );
