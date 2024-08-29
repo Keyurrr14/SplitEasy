@@ -192,6 +192,7 @@ class _LogInState extends State<LogIn> {
             return NamePhone(
               email: emailController.text,
               password: passwordController.text,
+              action: 'login'
             );
           },
         ),

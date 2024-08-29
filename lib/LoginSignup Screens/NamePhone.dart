@@ -6,8 +6,13 @@ import 'package:spliteasy/services/UserService.dart';
 class NamePhone extends StatefulWidget {
   final email;
   final password;
+  final action;
 
-  const NamePhone({super.key, required this.email, required this.password});
+  const NamePhone(
+      {super.key,
+      required this.email,
+      required this.password,
+      required this.action});
 
   @override
   State<NamePhone> createState() => _NamePhoneState();
@@ -187,12 +192,14 @@ class _NamePhoneState extends State<NamePhone> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              await sendData(
-                                widget.email,
-                                widget.password,
-                                _nameController.text,
-                                _phoneController.text,
-                              );
+                              if (widget.action == 'signup') {
+                                await sendData(
+                                  widget.email,
+                                  widget.password,
+                                  _nameController.text,
+                                  _phoneController.text,
+                                );
+                              }
 
                               Navigator.pushReplacement(
                                 context,

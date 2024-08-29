@@ -183,6 +183,7 @@ class _SignUpState extends State<SignUp> {
             return NamePhone(
               email: emailController.text,
               password: passwordController.text,
+              action: 'signup'
             );
           },
         ),
