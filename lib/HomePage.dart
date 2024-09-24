@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spliteasy/Account%20Screens/Account.dart';
 import 'package:spliteasy/GroupModel.dart';
 import 'package:spliteasy/GroupScreen.dart';
+import 'package:spliteasy/services/GroupService.dart';
 
 class HomePage extends StatefulWidget {
   final String fullName;
@@ -301,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (groupNameController.text.isNotEmpty &&
                         selectedGroupType != null) {
                       Navigator.of(context).pop({
@@ -309,6 +310,11 @@ class _HomePageState extends State<HomePage> {
                         'groupType': selectedGroupType,
                       });
                     }
+                    // Call the sendGroupData function
+                    await sendGroupData(
+                      groupNameController.text,
+                      selectedGroupType!.name,
+                    );
                   },
                   style: TextButton.styleFrom(
                       foregroundColor: Colors.white,

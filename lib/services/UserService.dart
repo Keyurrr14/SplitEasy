@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> sendData(
     String email, String password, String name, String phoneNumber) async {
-  final url = Uri.parse('http://192.168.31.56:3000/addUser');
+  final url = Uri.parse('http://192.168.31.56:3000/api/user/add');
 
   final response = await http.post(
     url,

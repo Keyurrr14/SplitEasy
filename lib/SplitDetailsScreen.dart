@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/material.dart';
 
 class SplitDetailsScreen extends StatelessWidget {
   final Map<Contact, double> splitDetails;
 
-  const SplitDetailsScreen({Key? key, required this.splitDetails}) : super(key: key);
+  const SplitDetailsScreen({Key? key, required this.splitDetails})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
